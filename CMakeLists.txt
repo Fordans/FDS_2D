@@ -22,6 +22,11 @@ src/engine/resource/FDS_TextureManager.cpp
 src/engine/resource/FDS_AudioManager.cpp
 src/engine/resource/FDS_FontManager.cpp
 src/engine/resource/FDS_ResourceManager.cpp
+src/engine/render/FDS_Camera.cpp
+src/engine/render/FDS_Sprite.h
+src/engine/render/FDS_Renderer.cpp
+src/engine/utility/FDS_math.h
+
 )
 
 target_link_options(

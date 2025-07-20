@@ -3,6 +3,8 @@
 
 #include "FDS_Time.h"
 
+#include "glm/glm.hpp"
+
 #include <memory>
 
 struct SDL_Window;
@@ -11,6 +13,7 @@ struct SDL_Renderer;
 namespace fds
 {
     class ResourceManager;
+    class Renderer;
 
     class Game final
     {
@@ -31,11 +34,13 @@ namespace fds
         void update(float deltaTime);
         void render();
     private:
+        glm::vec2 m_windowSize;
         SDL_Window* m_window;
         SDL_Renderer* m_renderer;
         bool m_isRunning;
         std::unique_ptr<fds::Time> m_time;
         std::unique_ptr<fds::ResourceManager> m_resourceManager;
+        std::unique_ptr<fds::Renderer> m_fdsRenderer;
     };
 }
 

@@ -1,5 +1,6 @@
 #include "FDS_Game.h"
 #include "engine/resource/FDS_ResourceManager.h"
+#include "engine/render/FDS_Renderer.h"
 
 #include "SDL3/SDL.h"
 #include "spdlog/spdlog.h"
@@ -7,6 +8,7 @@
 fds::Game::Game()
 {
     m_time = std::make_unique<fds::Time>();
+    m_windowSize = glm::vec2(1600.0f, 1200.0f);
 }
 
 fds::Game::~Game()
@@ -53,7 +55,7 @@ bool fds::Game::init()
         return false;
     }
 
-    m_window = SDL_CreateWindow("FDS_Game", 1600, 1200, 0);
+    m_window = SDL_CreateWindow("FDS_Game", int(m_windowSize.x), int(m_windowSize.y), 0);
     if(m_window == nullptr)
     {
         spdlog::error("Failed to create SDL window: {}", SDL_GetError());
@@ -75,6 +77,16 @@ bool fds::Game::init()
     catch (const std::exception& e)
     {
         spdlog::error("Failed to init ResourceManager: {}", e.what());
+        return false;
+    }
+
+    try
+    {
+        m_fdsRenderer = std::make_unique<fds::Renderer>(m_renderer, m_resourceManager.get());
+    } 
+    catch (const std::exception& e)
+    {
+        spdlog::error("Failed to init fdsRenderer: {}", e.what());
         return false;
     }
 
