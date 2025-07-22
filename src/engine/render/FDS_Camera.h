@@ -7,6 +7,8 @@
 
 namespace fds
 {
+    class TransformComponent;
+
     class Camera final
     {
     public:
@@ -24,10 +26,12 @@ namespace fds
 
         void setPosition(glm::vec2 position);
         void setLimitBounds(std::optional<fds::Rect> limit_bounds);
+        void setTarget(fds::TransformComponent* target);
 
         const glm::vec2& getPosition() const;
         std::optional<fds::Rect> getLimitBounds() const;
         glm::vec2 getViewportSize() const;
+        fds::TransformComponent* getTarget() const;
 
         Camera(const Camera&) = delete;
         Camera& operator=(const Camera&) = delete;
@@ -40,6 +44,7 @@ namespace fds
         glm::vec2 m_position;
         std::optional<fds::Rect> m_limitBounds;
         float m_smoothSpeed = 5.0f;
+        fds::TransformComponent* m_target = nullptr;
     };
 }
 

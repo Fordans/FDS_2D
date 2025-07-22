@@ -1,8 +1,10 @@
 #include "FDS_Game.h"
 #include "engine/resource/FDS_ResourceManager.h"
 #include "engine/render/FDS_Renderer.h"
+#include "engine/render/FDS_Camera.h"
 #include "engine/core/FDS_Config.h"
 #include "engine/input/FDS_InputManager.h"
+#include "engine/core/FDS_Context.h"
 
 #include "SDL3/SDL.h"
 #include "spdlog/spdlog.h"
@@ -112,7 +114,26 @@ bool fds::Game::init()
         spdlog::error("Failed to init InputManager: {}", e.what());
         return false;
     }
-    
+    //Init fds:Camera
+    try
+    {
+        m_camera = std::make_unique<fds::Camera>(glm::vec2(m_config->window_width_ / 2, m_config->window_height_ / 2));
+    }
+    catch(const std::exception& e)
+    {
+        spdlog::error("Failed to init Camera: {}", e.what());
+        return false;
+    }
+    // Init fds::Context
+    try
+    {
+        m_context = std::make_unique<fds::Context>(*m_inputManager, *m_fdsRenderer,  *m_camera, *m_resourceManager);
+    }
+    catch(const std::exception& e)
+    {
+        spdlog::error("Failed to init Context: {}", e.what());
+        return false;
+    }
 
     m_isRunning = true;
     return true;

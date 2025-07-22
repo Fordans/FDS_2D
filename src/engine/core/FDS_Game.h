@@ -16,6 +16,8 @@ namespace fds
     class Renderer;
     class Config;
     class InputManager;
+    class Context;
+    class Camera;
 
     class Game final
     {
@@ -44,6 +46,8 @@ namespace fds
         std::unique_ptr<fds::ResourceManager> m_resourceManager;
         std::unique_ptr<fds::Renderer> m_fdsRenderer;
         std::unique_ptr<fds::InputManager> m_inputManager;
+        std::unique_ptr<fds::Camera> m_camera;
+        std::unique_ptr<fds::Context> m_context;
     };
 }
 

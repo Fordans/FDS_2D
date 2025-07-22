@@ -45,6 +45,11 @@ void fds::Camera::setLimitBounds(std::optional<fds::Rect> limit_bounds)
     clampPosition();
 }
 
+void fds::Camera::setTarget(fds::TransformComponent *target)
+{
+    m_target = target;
+}
+
 const glm::vec2 &fds::Camera::getPosition() const
 {
     return m_position;
@@ -58,6 +63,11 @@ std::optional<fds::Rect> fds::Camera::getLimitBounds() const
 glm::vec2 fds::Camera::getViewportSize() const
 {
     return m_viewportSize;
+}
+
+fds::TransformComponent *fds::Camera::getTarget() const
+{
+    return m_target;
 }
 
 void fds::Camera::clampPosition()

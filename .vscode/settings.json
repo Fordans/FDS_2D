@@ -82,5 +82,7 @@
         "xtr1common": "cpp",
         "xtree": "cpp",
         "xutility": "cpp"
-    }
+    },
+    "Codegeex.Comment.LanguagePreference": "English",
+    "Codegeex.CompletionDelay": 1
 }
