@@ -14,6 +14,8 @@ namespace fds
 {
     class ResourceManager;
     class Renderer;
+    class Config;
+    class InputManager;
 
     class Game final
     {
@@ -34,13 +36,14 @@ namespace fds
         void update(float deltaTime);
         void render();
     private:
-        glm::vec2 m_windowSize;
         SDL_Window* m_window;
         SDL_Renderer* m_renderer;
         bool m_isRunning;
         std::unique_ptr<fds::Time> m_time;
+        std::unique_ptr<fds::Config> m_config;
         std::unique_ptr<fds::ResourceManager> m_resourceManager;
         std::unique_ptr<fds::Renderer> m_fdsRenderer;
+        std::unique_ptr<fds::InputManager> m_inputManager;
     };
 }
 

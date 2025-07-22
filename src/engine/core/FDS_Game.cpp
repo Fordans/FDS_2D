@@ -1,6 +1,8 @@
 #include "FDS_Game.h"
 #include "engine/resource/FDS_ResourceManager.h"
 #include "engine/render/FDS_Renderer.h"
+#include "engine/core/FDS_Config.h"
+#include "engine/input/FDS_InputManager.h"
 
 #include "SDL3/SDL.h"
 #include "spdlog/spdlog.h"
@@ -8,7 +10,6 @@
 fds::Game::Game()
 {
     m_time = std::make_unique<fds::Time>();
-    m_windowSize = glm::vec2(1600.0f, 1200.0f);
 }
 
 fds::Game::~Game()
@@ -28,7 +29,7 @@ void fds::Game::run()
         return;
     }
 
-    m_time->setTargetFPS(60);
+    m_time->setTargetFPS(m_config->target_fps_);
     while(m_isRunning)
     {
         m_time->update();
@@ -49,13 +50,25 @@ void fds::Game::shutdown() noexcept
 
 bool fds::Game::init()
 {
+    // Init fds::Config
+    try
+    {   
+        std::string_view file_path = "config.json";
+        m_config = std::make_unique<fds::Config>(file_path);
+    } 
+    catch (const std::exception& e)
+    {
+        spdlog::error("Failed to init Config: {}", e.what());
+        return false;
+    }
+    // Init SDL3
     if(!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO))
     {
         spdlog::error("Failed to initialize SDL: {}", SDL_GetError());
         return false;
     }
 
-    m_window = SDL_CreateWindow("FDS_Game", int(m_windowSize.x), int(m_windowSize.y), 0);
+    m_window = SDL_CreateWindow(m_config->window_title_.c_str(), m_config->window_width_, m_config->window_height_, 0);
     if(m_window == nullptr)
     {
         spdlog::error("Failed to create SDL window: {}", SDL_GetError());
@@ -69,7 +82,7 @@ bool fds::Game::init()
         SDL_DestroyWindow(m_window);
         return false;
     }
-
+    // Init fds::ResourceManager
     try
     {
         m_resourceManager = std::make_unique<fds::ResourceManager>(m_renderer);
@@ -79,7 +92,7 @@ bool fds::Game::init()
         spdlog::error("Failed to init ResourceManager: {}", e.what());
         return false;
     }
-
+    // Init fds::Renderer
     try
     {
         m_fdsRenderer = std::make_unique<fds::Renderer>(m_renderer, m_resourceManager.get());
@@ -89,6 +102,17 @@ bool fds::Game::init()
         spdlog::error("Failed to init fdsRenderer: {}", e.what());
         return false;
     }
+    // Init fds::InputManager
+    try
+    {
+        m_inputManager = std::make_unique<fds::InputManager>(m_renderer, m_config.get());
+    }
+    catch(const std::exception& e)
+    {
+        spdlog::error("Failed to init InputManager: {}", e.what());
+        return false;
+    }
+    
 
     m_isRunning = true;
     return true;
