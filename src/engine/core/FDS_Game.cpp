@@ -5,6 +5,7 @@
 #include "engine/core/FDS_Config.h"
 #include "engine/input/FDS_InputManager.h"
 #include "engine/core/FDS_Context.h"
+#include "engine/scene/FDS_SceneManager.h"
 
 #include "SDL3/SDL.h"
 #include "spdlog/spdlog.h"
@@ -134,7 +135,16 @@ bool fds::Game::init()
         spdlog::error("Failed to init Context: {}", e.what());
         return false;
     }
-
+    // Init fds::SceneManager
+    try
+    {
+        m_sceneManager = std::make_unique<fds::SceneManager>(*m_context);
+    }
+    catch(const std::exception& e)
+    {
+        spdlog::error("Failed to init SceneManager: {}", e.what());
+        return false;
+    }
     m_isRunning = true;
     return true;
 }

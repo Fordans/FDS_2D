@@ -18,6 +18,7 @@ namespace fds
     class InputManager;
     class Context;
     class Camera;
+    class SceneManager;
 
     class Game final
     {
@@ -48,6 +49,7 @@ namespace fds
         std::unique_ptr<fds::InputManager> m_inputManager;
         std::unique_ptr<fds::Camera> m_camera;
         std::unique_ptr<fds::Context> m_context;
+        std::unique_ptr<fds::SceneManager> m_sceneManager;
     };
 }
 

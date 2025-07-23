@@ -32,8 +32,12 @@ src/engine/resource/FDS_TextureManager.cpp
 src/engine/resource/FDS_AudioManager.cpp
 src/engine/resource/FDS_FontManager.cpp
 src/engine/resource/FDS_ResourceManager.cpp
+src/engine/scene/FDS_Scene.cpp
+src/engine/scene/FDS_SceneManager.cpp
 src/engine/utility/FDS_alignment.h
 src/engine/utility/FDS_math.h
+
+src/game/scene/TestScene.cpp
 )
 
 target_link_options(
