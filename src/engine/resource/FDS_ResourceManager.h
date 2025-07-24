@@ -53,9 +53,9 @@ namespace fds
         ResourceManager(ResourceManager&&) = delete;
         ResourceManager& operator=(ResourceManager&&) = delete;
     private:
-        std::unique_ptr<TextureManager> m_textureManager;
-        std::unique_ptr<AudioManager> m_audioManager;
-        std::unique_ptr<FontManager> m_fontManager;
+        std::unique_ptr<TextureManager> textureManager_;
+        std::unique_ptr<AudioManager> audioManager_;
+        std::unique_ptr<FontManager> fontManager_;
     };
 }
 #endif // FDS_RESOURCE_MANAGER_H

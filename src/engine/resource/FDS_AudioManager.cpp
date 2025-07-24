@@ -33,8 +33,8 @@ fds::AudioManager::~AudioManager()
 
 Mix_Chunk* fds::AudioManager::loadChunk(std::string_view filePath)
 {
-    auto it = m_chunkTable.find(std::string(filePath));
-    if (it != m_chunkTable.end())
+    auto it = chunkTable_.find(std::string(filePath));
+    if (it != chunkTable_.end())
     {
         return it->second.get();
     }
@@ -47,14 +47,14 @@ Mix_Chunk* fds::AudioManager::loadChunk(std::string_view filePath)
         return nullptr;
     }
 
-    m_chunkTable.emplace(filePath, std::unique_ptr<Mix_Chunk, ChunkDeleter>(chunk));
+    chunkTable_.emplace(filePath, std::unique_ptr<Mix_Chunk, ChunkDeleter>(chunk));
     return chunk;
 }
 
 Mix_Music* fds::AudioManager::loadMusic(std::string_view filePath)
 {
-    auto it = m_musicTable.find(std::string(filePath));
-    if (it != m_musicTable.end())
+    auto it = musicTable_.find(std::string(filePath));
+    if (it != musicTable_.end())
     {
         return it->second.get();
     }
@@ -67,14 +67,14 @@ Mix_Music* fds::AudioManager::loadMusic(std::string_view filePath)
         return nullptr;
     }
 
-    m_musicTable.emplace(filePath, std::unique_ptr<Mix_Music, MusicDeleter>(music));
+    musicTable_.emplace(filePath, std::unique_ptr<Mix_Music, MusicDeleter>(music));
     return music;
 }
 
 Mix_Chunk* fds::AudioManager::getChunk(std::string_view filePath)
 {
-    auto it = m_chunkTable.find(std::string(filePath));
-    if (it != m_chunkTable.end())
+    auto it = chunkTable_.find(std::string(filePath));
+    if (it != chunkTable_.end())
     {
         return it->second.get();
     }
@@ -87,8 +87,8 @@ Mix_Chunk* fds::AudioManager::getChunk(std::string_view filePath)
 
 Mix_Music* fds::AudioManager::getMusic(std::string_view filePath)
 {
-    auto it = m_musicTable.find(std::string(filePath));
-    if (it != m_musicTable.end())
+    auto it = musicTable_.find(std::string(filePath));
+    if (it != musicTable_.end())
     {
         return it->second.get();
     }
@@ -101,10 +101,10 @@ Mix_Music* fds::AudioManager::getMusic(std::string_view filePath)
 
 void fds::AudioManager::unloadChunk(std::string_view filePath)
 {
-    auto it = m_chunkTable.find(std::string(filePath));
-    if (it != m_chunkTable.end())
+    auto it = chunkTable_.find(std::string(filePath));
+    if (it != chunkTable_.end())
     {
-        m_chunkTable.erase(it);
+        chunkTable_.erase(it);
         spdlog::debug("Unloaded chunk: {}", filePath);
     }
     else
@@ -115,10 +115,10 @@ void fds::AudioManager::unloadChunk(std::string_view filePath)
 
 void fds::AudioManager::unloadMusic(std::string_view filePath)
 {
-    auto it = m_musicTable.find(std::string(filePath));
-    if (it != m_musicTable.end())
+    auto it = musicTable_.find(std::string(filePath));
+    if (it != musicTable_.end())
     {
-        m_musicTable.erase(it);
+        musicTable_.erase(it);
         spdlog::debug("Unloaded music: {}", filePath);
     }
     else
@@ -129,19 +129,19 @@ void fds::AudioManager::unloadMusic(std::string_view filePath)
 
 void fds::AudioManager::clearChunk()
 {
-    if(!m_chunkTable.empty())
+    if(!chunkTable_.empty())
     {    
-        spdlog::debug("Clearing {} loaded chunks", m_chunkTable.size());
-        m_chunkTable.clear();
+        spdlog::debug("Clearing {} loaded chunks", chunkTable_.size());
+        chunkTable_.clear();
     }
 }
 
 void fds::AudioManager::clearMusic()
 {
-    if(!m_musicTable.empty())
+    if(!musicTable_.empty())
     {
-        spdlog::debug("Clearing {} loaded music tracks", m_musicTable.size());
-        m_musicTable.clear();
+        spdlog::debug("Clearing {} loaded music tracks", musicTable_.size());
+        musicTable_.clear();
     }
 }
 

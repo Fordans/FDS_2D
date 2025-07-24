@@ -39,17 +39,17 @@ namespace fds
         void update(float deltaTime);
         void render();
     private:
-        SDL_Window* m_window;
-        SDL_Renderer* m_renderer;
-        bool m_isRunning;
-        std::unique_ptr<fds::Time> m_time;
-        std::unique_ptr<fds::Config> m_config;
-        std::unique_ptr<fds::ResourceManager> m_resourceManager;
-        std::unique_ptr<fds::Renderer> m_fdsRenderer;
-        std::unique_ptr<fds::InputManager> m_inputManager;
-        std::unique_ptr<fds::Camera> m_camera;
-        std::unique_ptr<fds::Context> m_context;
-        std::unique_ptr<fds::SceneManager> m_sceneManager;
+        SDL_Window* window_;
+        SDL_Renderer* renderer_;
+        bool isRunning_;
+        std::unique_ptr<fds::Time> time_;
+        std::unique_ptr<fds::Config> config_;
+        std::unique_ptr<fds::ResourceManager> resourceManager_;
+        std::unique_ptr<fds::Renderer> fdsRenderer_;
+        std::unique_ptr<fds::InputManager> inputManager_;
+        std::unique_ptr<fds::Camera> camera_;
+        std::unique_ptr<fds::Context> context_;
+        std::unique_ptr<fds::SceneManager> sceneManager_;
     };
 }
 

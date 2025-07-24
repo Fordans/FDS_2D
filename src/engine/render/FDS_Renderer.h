@@ -30,7 +30,7 @@ namespace fds
         void clearScreen();
         void setDrawColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
         void setDrawColorFloat(float r, float g, float b, float a = 1.0f);
-        SDL_Renderer* getSDLRenderer() const { return m_renderer; }
+        SDL_Renderer* getSDLRenderer() const { return renderer_; }
 
         Renderer(const Renderer&) = delete;
         Renderer& operator=(const Renderer&) = delete;
@@ -40,8 +40,8 @@ namespace fds
         std::optional<SDL_FRect> getSpriteSrcRect(const Sprite& sprite);
         bool isRectInViewport(const Camera& camera, const SDL_FRect& rect);
     private:
-        SDL_Renderer *m_renderer = nullptr;
-        fds::ResourceManager *m_resourceManager = nullptr;
+        SDL_Renderer *renderer_ = nullptr;
+        fds::ResourceManager *resourceManager_ = nullptr;
     };
 }
 

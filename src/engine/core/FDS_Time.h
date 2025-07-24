@@ -26,12 +26,12 @@ namespace fds
     private:
         void limitFrameRate(double current_time) noexcept;
     private:
-        int m_targetFPS = 0; // Default target FPS (0 means no limit)
-        double m_timeScale = 1.0; // Default time scale (1.0)
-        double m_targetFrameTime = 0.0;
-        double m_deltaTime = 0.0;
-        Uint64 m_lastFrameTime;
-        Uint64 m_frameStartTime;
+        int targetFPS_ = 0; // Default target FPS (0 means no limit)
+        double timeScale_ = 1.0; // Default time scale (1.0)
+        double targetFrameTime_ = 0.0;
+        double deltaTime_ = 0.0;
+        Uint64 lastFrameTime_;
+        Uint64 frameStartTime_;
     };
 }
 

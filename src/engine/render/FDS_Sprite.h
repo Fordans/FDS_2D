@@ -14,21 +14,21 @@ namespace fds
     public:
         Sprite() = default;
         Sprite(std::string_view id, const std::optional<SDL_FRect>& source_rect = std::nullopt, bool is_flipped = false)
-        : m_id(id),
-          m_srcRect(source_rect),
-          m_isFlipped(is_flipped)
+        : id_(id),
+          srcRect_(source_rect),
+          isFlipped_(is_flipped)
         {}
         // getter and setter
-        [[nodiscard]] const std::string& getId() const { return m_id; }
-        void setId(std::string_view id) { m_id = id; }
-        [[nodiscard]] const std::optional<SDL_FRect>& getSourceRect() const { return m_srcRect; }
-        void setSourceRect(std::optional<SDL_FRect> source_rect) { m_srcRect = std::move(source_rect); }
-        [[nodiscard]] bool isFlipped() const { return m_isFlipped; }
-        void setFlipped(bool flipped) { m_isFlipped = flipped; }
+        [[nodiscard]] const std::string& getId() const { return id_; }
+        void setId(std::string_view id) { id_ = id; }
+        [[nodiscard]] const std::optional<SDL_FRect>& getSourceRect() const { return srcRect_; }
+        void setSourceRect(std::optional<SDL_FRect> source_rect) { srcRect_ = std::move(source_rect); }
+        [[nodiscard]] bool isFlipped() const { return isFlipped_; }
+        void setFlipped(bool flipped) { isFlipped_ = flipped; }
     private:
-        std::string m_id;
-        std::optional<SDL_FRect> m_srcRect;
-        bool m_isFlipped = false;
+        std::string id_;
+        std::optional<SDL_FRect> srcRect_;
+        bool isFlipped_ = false;
     };
 }
 

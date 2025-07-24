@@ -33,7 +33,7 @@ namespace fds
             nlohmann::json j;
             file >> j;
             fromJson(j);
-            spdlog::info("Load successfully from {}", filepath);
+            spdlog::debug("Load successfully from {}", filepath);
             return true;
         }
         catch (const std::exception &e)

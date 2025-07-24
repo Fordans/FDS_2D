@@ -6,14 +6,14 @@
 #include "spdlog/spdlog.h"
 
 fds::Renderer::Renderer(SDL_Renderer *sdl_renderer, fds::ResourceManager *resource_manager)
-    : m_renderer(sdl_renderer), m_resourceManager(resource_manager)
+    : renderer_(sdl_renderer), resourceManager_(resource_manager)
 {
     setDrawColor(0, 0, 0, 255);
 }
 
 void fds::Renderer::drawSprite(const Camera &camera, const Sprite &sprite, const glm::vec2 &position, const glm::vec2 &scale, double angle)
 {
-    auto texture = m_resourceManager->getTexture(sprite.getId());
+    auto texture = resourceManager_->getTexture(sprite.getId());
     if (!texture)
     {
         spdlog::error("Failed to get texture, id : {}", sprite.getId());
@@ -42,7 +42,7 @@ void fds::Renderer::drawSprite(const Camera &camera, const Sprite &sprite, const
         return;
     }
 
-    if (!SDL_RenderTextureRotated(m_renderer, texture, &src_rect.value(), &dest_rect, angle, NULL, sprite.isFlipped() ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE))
+    if (!SDL_RenderTextureRotated(renderer_, texture, &src_rect.value(), &dest_rect, angle, NULL, sprite.isFlipped() ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE))
     {
         spdlog::error("Failed to set texture filp,ID: {} : {}", sprite.getId(), SDL_GetError());
     }
@@ -50,7 +50,7 @@ void fds::Renderer::drawSprite(const Camera &camera, const Sprite &sprite, const
 
 void fds::Renderer::drawParallax(const Camera &camera, const Sprite &sprite, const glm::vec2 &position, const glm::vec2 &scroll_factor, glm::bvec2 repeat, const glm::vec2 &scale)
 {
-    auto texture = m_resourceManager->getTexture(sprite.getId());
+    auto texture = resourceManager_->getTexture(sprite.getId());
     if (!texture)
     {
         spdlog::error("Failed to get texture, id : {}", sprite.getId());
@@ -98,7 +98,7 @@ void fds::Renderer::drawParallax(const Camera &camera, const Sprite &sprite, con
         for (float x = start.x; x < stop.x; x += scaled_tex_w)
         {
             SDL_FRect dest_rect = {x, y, scaled_tex_w, scaled_tex_h};
-            if (!SDL_RenderTexture(m_renderer, texture, nullptr, &dest_rect))
+            if (!SDL_RenderTexture(renderer_, texture, nullptr, &dest_rect))
             {
                 spdlog::error("Failed to render parallax, id : {}, {}", sprite.getId(), SDL_GetError());
                 return;
@@ -109,7 +109,7 @@ void fds::Renderer::drawParallax(const Camera &camera, const Sprite &sprite, con
 
 void fds::Renderer::drawUISprite(const Sprite &sprite, const glm::vec2 &position, const std::optional<glm::vec2> &size)
 {
-    auto texture = m_resourceManager->getTexture(sprite.getId());
+    auto texture = resourceManager_->getTexture(sprite.getId());
     if (!texture)
     {
         spdlog::error("Failed to get texture, id : {}", sprite.getId());
@@ -135,7 +135,7 @@ void fds::Renderer::drawUISprite(const Sprite &sprite, const glm::vec2 &position
         dest_rect.h = src_rect.value().h;
     }
 
-    if (!SDL_RenderTextureRotated(m_renderer, texture, &src_rect.value(), &dest_rect, 0.0, nullptr, sprite.isFlipped() ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE))
+    if (!SDL_RenderTextureRotated(renderer_, texture, &src_rect.value(), &dest_rect, 0.0, nullptr, sprite.isFlipped() ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE))
     {
         spdlog::error("Failed to render UI sprite, id : {}, {}", sprite.getId(), SDL_GetError());
     }
@@ -145,7 +145,7 @@ void fds::Renderer::drawUIFilledRect(const fds::Rect &rect, const fds::FColor &c
 {
     setDrawColorFloat(color.r, color.g, color.b, color.a);
     SDL_FRect sdl_rect = {rect.pos.x, rect.pos.y, rect.size.x, rect.size.y};
-    if (!SDL_RenderFillRect(m_renderer, &sdl_rect))
+    if (!SDL_RenderFillRect(renderer_, &sdl_rect))
     {
         spdlog::error("Failed to render Filled Rect : {}", SDL_GetError());
     }
@@ -154,27 +154,27 @@ void fds::Renderer::drawUIFilledRect(const fds::Rect &rect, const fds::FColor &c
 
 void fds::Renderer::present()
 {
-    SDL_RenderPresent(m_renderer);
+    SDL_RenderPresent(renderer_);
 }
 
 void fds::Renderer::clearScreen()
 {
-    SDL_RenderClear(m_renderer);
+    SDL_RenderClear(renderer_);
 }
 
 void fds::Renderer::setDrawColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
-    SDL_SetRenderDrawColor(m_renderer, r, g, b, a);
+    SDL_SetRenderDrawColor(renderer_, r, g, b, a);
 }
 
 void fds::Renderer::setDrawColorFloat(float r, float g, float b, float a)
 {
-    SDL_SetRenderDrawColorFloat(m_renderer, r, g, b, a);
+    SDL_SetRenderDrawColorFloat(renderer_, r, g, b, a);
 }
 
 std::optional<SDL_FRect> fds::Renderer::getSpriteSrcRect(const Sprite &sprite)
 {
-    SDL_Texture *texture = m_resourceManager->getTexture(sprite.getId());
+    SDL_Texture *texture = resourceManager_->getTexture(sprite.getId());
     if (!texture)
     {
         spdlog::error("Failed to get texture, id : {}", sprite.getId());

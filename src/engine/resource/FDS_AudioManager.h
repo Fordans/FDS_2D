@@ -54,8 +54,8 @@ namespace fds
         void clearMusic();
         void clear();
     private:
-        std::unordered_map<std::string, std::unique_ptr<Mix_Chunk, ChunkDeleter>> m_chunkTable;
-        std::unordered_map<std::string, std::unique_ptr<Mix_Music, MusicDeleter>> m_musicTable;
+        std::unordered_map<std::string, std::unique_ptr<Mix_Chunk, ChunkDeleter>> chunkTable_;
+        std::unordered_map<std::string, std::unique_ptr<Mix_Music, MusicDeleter>> musicTable_;
     };
 }
 

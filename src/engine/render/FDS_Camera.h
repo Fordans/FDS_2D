@@ -40,11 +40,11 @@ namespace fds
     private:
         void clampPosition();
     private:
-        glm::vec2 m_viewportSize;
-        glm::vec2 m_position;
-        std::optional<fds::Rect> m_limitBounds;
-        float m_smoothSpeed = 5.0f;
-        fds::TransformComponent* m_target = nullptr;
+        glm::vec2 viewportSize_;
+        glm::vec2 position_;
+        std::optional<fds::Rect> limitBounds_;
+        float smoothSpeed_ = 5.0f;
+        fds::TransformComponent* target_ = nullptr;
     };
 }
 

@@ -12,6 +12,7 @@ namespace fds
 
     protected:
         fds::GameObject *owner_ = nullptr;
+
     public:
         Component() = default;
         virtual ~Component() = default;

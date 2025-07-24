@@ -13,7 +13,7 @@ fds::FontManager::FontManager()
 
 fds::FontManager::~FontManager()
 {
-    if (!m_fontTable.empty())
+    if (!fontTable_.empty())
     {
         clear();
     }
@@ -31,8 +31,8 @@ TTF_Font *fds::FontManager::loadFont(std::string_view filePath, int fontSize)
 
     FontKey key = {std::string(filePath), fontSize};
 
-    auto it = m_fontTable.find(key);
-    if (it != m_fontTable.end())
+    auto it = fontTable_.find(key);
+    if (it != fontTable_.end())
     {
         return it->second.get();
     }
@@ -44,7 +44,7 @@ TTF_Font *fds::FontManager::loadFont(std::string_view filePath, int fontSize)
         return nullptr;
     }
 
-    m_fontTable.emplace(key, std::unique_ptr<TTF_Font, FontDeleter>(font));
+    fontTable_.emplace(key, std::unique_ptr<TTF_Font, FontDeleter>(font));
     return font;
 }
 
@@ -52,8 +52,8 @@ TTF_Font *fds::FontManager::getFont(std::string_view filePath, int fontSize)
 {
     FontKey key = {std::string(filePath), fontSize};
 
-    auto it = m_fontTable.find(key);
-    if (it != m_fontTable.end())
+    auto it = fontTable_.find(key);
+    if (it != fontTable_.end())
     {
         return it->second.get();
     }
@@ -66,10 +66,10 @@ void fds::FontManager::unloadFont(std::string_view filePath, int fontSize)
 {
     FontKey key = {std::string(filePath), fontSize};
 
-    auto it = m_fontTable.find(key);
-    if (it != m_fontTable.end())
+    auto it = fontTable_.find(key);
+    if (it != fontTable_.end())
     {
-        m_fontTable.erase(it);
+        fontTable_.erase(it);
     }
     else
     {
@@ -79,9 +79,9 @@ void fds::FontManager::unloadFont(std::string_view filePath, int fontSize)
 
 void fds::FontManager::clear()
 {
-    if(!m_fontTable.empty())
+    if(!fontTable_.empty())
     {
-        m_fontTable.clear();
-        spdlog::info("{} fonts cleared.", m_fontTable.size());
+        fontTable_.clear();
+        spdlog::info("{} fonts cleared.", fontTable_.size());
     }
 }

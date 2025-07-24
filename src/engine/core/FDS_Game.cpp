@@ -9,15 +9,17 @@
 
 #include "SDL3/SDL.h"
 #include "spdlog/spdlog.h"
-
+#include "box2d/box2d.h"
 fds::Game::Game()
 {
-    m_time = std::make_unique<fds::Time>();
+    auto d = b2DefaultWorldDef();
+    auto w = b2CreateWorld(&d);
+    time_ = std::make_unique<fds::Time>();
 }
 
 fds::Game::~Game()
 {
-    if(m_isRunning)
+    if(isRunning_)
     {
         spdlog::warn("Exceptionally cleaning up the game resources.");
         clean();
@@ -32,15 +34,14 @@ void fds::Game::run()
         return;
     }
 
-    m_time->setTargetFPS(m_config->target_fps_);
-    while(m_isRunning)
+    time_->setTargetFPS(config_->target_fps_);
+    while(isRunning_)
     {
-        m_time->update();
-        float deltaTime = m_time->getDeltaTime();
+        time_->update();
+        float deltaTime = time_->getDeltaTime();
         handleEvents();
         update(deltaTime);
         render();
-        //spdlog::info("Current FPS: {:.9f}", 1.0 / deltaTime);
     }
 
     clean();
@@ -48,7 +49,7 @@ void fds::Game::run()
 
 void fds::Game::shutdown() noexcept
 {
-    m_isRunning = false;
+    isRunning_ = false;
 }
 
 bool fds::Game::init()
@@ -57,7 +58,7 @@ bool fds::Game::init()
     try
     {   
         std::string_view file_path = "config.json";
-        m_config = std::make_unique<fds::Config>(file_path);
+        config_ = std::make_unique<fds::Config>(file_path);
     } 
     catch (const std::exception& e)
     {
@@ -71,24 +72,24 @@ bool fds::Game::init()
         return false;
     }
 
-    m_window = SDL_CreateWindow(m_config->window_title_.c_str(), m_config->window_width_, m_config->window_height_, 0);
-    if(m_window == nullptr)
+    window_ = SDL_CreateWindow(config_->window_title_.c_str(), config_->window_width_, config_->window_height_, 0);
+    if(window_ == nullptr)
     {
         spdlog::error("Failed to create SDL window: {}", SDL_GetError());
         return false;
     }
 
-    m_renderer = SDL_CreateRenderer(m_window, 0);
-    if(m_renderer == nullptr)
+    renderer_ = SDL_CreateRenderer(window_, 0);
+    if(renderer_ == nullptr)
     {
         spdlog::error("Failed to create SDL renderer: {}", SDL_GetError());
-        SDL_DestroyWindow(m_window);
+        SDL_DestroyWindow(window_);
         return false;
     }
     // Init fds::ResourceManager
     try
     {
-        m_resourceManager = std::make_unique<fds::ResourceManager>(m_renderer);
+        resourceManager_ = std::make_unique<fds::ResourceManager>(renderer_);
     } 
     catch (const std::exception& e)
     {
@@ -98,7 +99,7 @@ bool fds::Game::init()
     // Init fds::Renderer
     try
     {
-        m_fdsRenderer = std::make_unique<fds::Renderer>(m_renderer, m_resourceManager.get());
+        fdsRenderer_ = std::make_unique<fds::Renderer>(renderer_, resourceManager_.get());
     } 
     catch (const std::exception& e)
     {
@@ -108,7 +109,7 @@ bool fds::Game::init()
     // Init fds::InputManager
     try
     {
-        m_inputManager = std::make_unique<fds::InputManager>(m_renderer, m_config.get());
+        inputManager_ = std::make_unique<fds::InputManager>(renderer_, config_.get());
     }
     catch(const std::exception& e)
     {
@@ -118,7 +119,7 @@ bool fds::Game::init()
     //Init fds:Camera
     try
     {
-        m_camera = std::make_unique<fds::Camera>(glm::vec2(m_config->window_width_ / 2, m_config->window_height_ / 2));
+        camera_ = std::make_unique<fds::Camera>(glm::vec2(config_->window_width_ / 2, config_->window_height_ / 2));
     }
     catch(const std::exception& e)
     {
@@ -128,7 +129,7 @@ bool fds::Game::init()
     // Init fds::Context
     try
     {
-        m_context = std::make_unique<fds::Context>(*m_inputManager, *m_fdsRenderer,  *m_camera, *m_resourceManager);
+        context_ = std::make_unique<fds::Context>(*inputManager_, *fdsRenderer_,  *camera_, *resourceManager_);
     }
     catch(const std::exception& e)
     {
@@ -138,32 +139,32 @@ bool fds::Game::init()
     // Init fds::SceneManager
     try
     {
-        m_sceneManager = std::make_unique<fds::SceneManager>(*m_context);
+        sceneManager_ = std::make_unique<fds::SceneManager>(*context_);
     }
     catch(const std::exception& e)
     {
         spdlog::error("Failed to init SceneManager: {}", e.what());
         return false;
     }
-    m_isRunning = true;
+    isRunning_ = true;
     return true;
 }
 
 void fds::Game::clean()
 {
-    if(m_renderer != nullptr)
+    if(renderer_ != nullptr)
     {
-        SDL_DestroyRenderer(m_renderer);
+        SDL_DestroyRenderer(renderer_);
     }
 
-    if(m_window != nullptr)
+    if(window_ != nullptr)
     {
-        SDL_DestroyWindow(m_window);
+        SDL_DestroyWindow(window_);
     }
 
     SDL_Quit();
 
-    spdlog::info("Game resources cleaned up successfully.");
+    spdlog::debug("Game resources cleaned up successfully.");
 }
 
 void fds::Game::handleEvents()

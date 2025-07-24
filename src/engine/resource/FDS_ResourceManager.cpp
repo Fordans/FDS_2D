@@ -7,99 +7,99 @@
 
 fds::ResourceManager::ResourceManager(SDL_Renderer* renderer)
 {
-    m_textureManager = std::make_unique<TextureManager>(renderer);
-    m_audioManager = std::make_unique<AudioManager>();
-    m_fontManager = std::make_unique<FontManager>();
+    textureManager_ = std::make_unique<TextureManager>(renderer);
+    audioManager_ = std::make_unique<AudioManager>();
+    fontManager_ = std::make_unique<FontManager>();
 }
 
 void fds::ResourceManager::clear()
 {
-    m_textureManager->clear();
-    m_audioManager->clear();
-    m_fontManager->clear();
+    textureManager_->clear();
+    audioManager_->clear();
+    fontManager_->clear();
 }
 
 SDL_Texture* fds::ResourceManager::loadTexture(std::string_view filePath)
 {
-    return m_textureManager->loadTexture(filePath);
+    return textureManager_->loadTexture(filePath);
 }
 
 SDL_Texture* fds::ResourceManager::getTexture(std::string_view filePath)
 {
-    return m_textureManager->getTexture(filePath);
+    return textureManager_->getTexture(filePath);
 }
 
 glm::vec2 fds::ResourceManager::getTextureSize(std::string_view filePath)
 {
-    return m_textureManager->getTextureSize(filePath);
+    return textureManager_->getTextureSize(filePath);
 }
 
 void fds::ResourceManager::unloadTexture(std::string_view filePath)
 {
-    m_textureManager->unloadTexture(filePath);
+    textureManager_->unloadTexture(filePath);
 }
 
 void fds::ResourceManager::clearTextures()
 {
-    m_textureManager->clear();
+    textureManager_->clear();
 }
 
 Mix_Chunk* fds::ResourceManager::loadChunk(std::string_view filePath)
 {
-    return m_audioManager->loadChunk(filePath);
+    return audioManager_->loadChunk(filePath);
 }
 
 Mix_Chunk* fds::ResourceManager::getChunk(std::string_view filePath)
 {
-    return m_audioManager->getChunk(filePath);
+    return audioManager_->getChunk(filePath);
 }
 
 void fds::ResourceManager::unloadChunk(std::string_view filePath)
 {
-    m_audioManager->unloadChunk(filePath);
+    audioManager_->unloadChunk(filePath);
 }
 
 void fds::ResourceManager::clearChunks()
 {
-    m_audioManager->clearChunk();
+    audioManager_->clearChunk();
 }
 
 Mix_Music* fds::ResourceManager::loadMusic(std::string_view filePath)
 {
-    return m_audioManager->loadMusic(filePath);
+    return audioManager_->loadMusic(filePath);
 }
 
 Mix_Music* fds::ResourceManager::getMusic(std::string_view filePath)
 {
-    return m_audioManager->getMusic(filePath);
+    return audioManager_->getMusic(filePath);
 }
 
 void fds::ResourceManager::unloadMusic(std::string_view filePath)
 {
-    m_audioManager->unloadMusic(filePath);
+    audioManager_->unloadMusic(filePath);
 }
 
 void fds::ResourceManager::clearMusic()
 {
-    m_audioManager->clearMusic();
+    audioManager_->clearMusic();
 }
 
 TTF_Font* fds::ResourceManager::loadFont(std::string_view filePath, int fontSize)
 {
-    return m_fontManager->loadFont(filePath, fontSize);
+    return fontManager_->loadFont(filePath, fontSize);
 }
 
 TTF_Font* fds::ResourceManager::getFont(std::string_view filePath, int fontSize)
 {
-    return m_fontManager->getFont(filePath, fontSize);
+    return fontManager_->getFont(filePath, fontSize);
 }
 
 void fds::ResourceManager::unloadFont(std::string_view filePath, int fontSize)
 {
-    m_fontManager->unloadFont(filePath, fontSize);
+    fontManager_->unloadFont(filePath, fontSize);
 }
 
 void fds::ResourceManager::clearFonts()
 {
-    m_fontManager->clear();
+    fontManager_->clear();
 }

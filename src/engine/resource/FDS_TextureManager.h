@@ -44,8 +44,8 @@ namespace fds
         glm::vec2 getTextureSize(std::string_view filePath) noexcept;
         void clear();
     private:
-        SDL_Renderer* m_renderer; // Renderer of the game
-        std::unordered_map<std::string, std::unique_ptr<SDL_Texture, TextureDeleter>> m_textureTable;
+        SDL_Renderer* renderer_; // Renderer of the game
+        std::unordered_map<std::string, std::unique_ptr<SDL_Texture, TextureDeleter>> textureTable_;
     };
 }
 

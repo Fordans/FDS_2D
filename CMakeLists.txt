@@ -9,6 +9,8 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+
+
 include_directories(src)
 include_directories(include)
 link_directories(lib)
@@ -37,7 +39,7 @@ src/engine/scene/FDS_SceneManager.cpp
 src/engine/utility/FDS_alignment.h
 src/engine/utility/FDS_math.h
 
-src/game/scene/TestScene.cpp
+src/game/scene/DemoScene.cpp
 )
 
 target_link_options(
@@ -53,5 +55,5 @@ SDL3
 SDL3_image
 SDL3_mixer
 SDL3_ttf
+box2d
 )
-

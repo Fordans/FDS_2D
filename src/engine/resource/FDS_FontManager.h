@@ -52,7 +52,7 @@ namespace fds
         void unloadFont(std::string_view filePath, int fontSize);
         void clear();
     private:
-        std::unordered_map<FontKey, std::unique_ptr<TTF_Font, FontDeleter>, FontKeyHash> m_fontTable;
+        std::unordered_map<FontKey, std::unique_ptr<TTF_Font, FontDeleter>, FontKeyHash> fontTable_;
     };
 }
 

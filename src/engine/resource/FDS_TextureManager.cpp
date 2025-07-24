@@ -7,8 +7,8 @@
 
 fds::TextureManager::TextureManager(SDL_Renderer* renderer)
 {
-    m_renderer = renderer;
-    if (m_renderer == nullptr)
+    renderer_ = renderer;
+    if (renderer_ == nullptr)
     {
         spdlog::error("Failed to initialize TextureManager: Renderer is null.");
         throw std::runtime_error("Renderer cannot be null");
@@ -18,13 +18,13 @@ fds::TextureManager::TextureManager(SDL_Renderer* renderer)
 SDL_Texture *fds::TextureManager::loadTexture(std::string_view filePath)
 {
     // Check if the texture is already loaded
-    auto it = m_textureTable.find(std::string(filePath));
-    if (it != m_textureTable.end())
+    auto it = textureTable_.find(std::string(filePath));
+    if (it != textureTable_.end())
     {
         return it->second.get();
     }
     // If not, load the texture
-    SDL_Texture* texture = IMG_LoadTexture(m_renderer, filePath.data());
+    SDL_Texture* texture = IMG_LoadTexture(renderer_, filePath.data());
     if (!SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST)) {
         spdlog::warn("Failed to set scale mode for texture {}: {}", filePath, SDL_GetError());
     }
@@ -33,14 +33,14 @@ SDL_Texture *fds::TextureManager::loadTexture(std::string_view filePath)
         spdlog::error("Failed to load texture from {}: {}", filePath, SDL_GetError());
         throw std::runtime_error("Failed to load texture");
     }
-    m_textureTable.emplace(filePath, std::unique_ptr<SDL_Texture, TextureDeleter>(texture));
+    textureTable_.emplace(filePath, std::unique_ptr<SDL_Texture, TextureDeleter>(texture));
     return texture;
 }
 
 SDL_Texture* fds::TextureManager::getTexture(std::string_view filePath)
 {
-    auto it = m_textureTable.find(filePath.data());
-    if (it != m_textureTable.end())
+    auto it = textureTable_.find(filePath.data());
+    if (it != textureTable_.end())
     {
         return it->second.get();
     }
@@ -53,10 +53,10 @@ SDL_Texture* fds::TextureManager::getTexture(std::string_view filePath)
 
 void fds::TextureManager::unloadTexture(std::string_view filePath)
 {
-    auto it = m_textureTable.find(filePath.data());
-    if (it != m_textureTable.end())
+    auto it = textureTable_.find(filePath.data());
+    if (it != textureTable_.end())
     {
-        m_textureTable.erase(it);
+        textureTable_.erase(it);
     }
     else
     {
@@ -84,9 +84,9 @@ glm::vec2 fds::TextureManager::getTextureSize(std::string_view filePath) noexcep
 
 void fds::TextureManager::clear()
 {
-    if(!m_textureTable.empty())
+    if(!textureTable_.empty())
     {
-        m_textureTable.clear();
-        spdlog::info("{} textures have been cleared from the TextureManager.", m_textureTable.size());
+        textureTable_.clear();
+        spdlog::info("{} textures have been cleared from the TextureManager.", textureTable_.size());
     }
 }
