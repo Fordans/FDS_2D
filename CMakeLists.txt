@@ -9,14 +9,13 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-
-
 include_directories(src)
 include_directories(include)
 link_directories(lib)
 
 add_executable(
     FDS_2D
+src/engine/audio/FDS_AudioPlayer.cpp
 src/engine/component/FDS_Component.h
 src/engine/component/FDS_Transform_Component.cpp
 src/engine/component/FDS_Sprite_Component.cpp
@@ -27,8 +26,10 @@ src/engine/core/FDS_Config.cpp
 src/engine/core/FDS_Context.cpp
 src/engine/input/FDS_InputManager.cpp
 src/engine/object/FDS_GameObject.cpp
+src/engine/render/FDS_Animation.cpp
 src/engine/render/FDS_Camera.cpp
 src/engine/render/FDS_Sprite.h
+src/engine/render/FDS_TextRenderer.cpp
 src/engine/render/FDS_Renderer.cpp
 src/engine/resource/FDS_TextureManager.cpp
 src/engine/resource/FDS_AudioManager.cpp
