@@ -96,7 +96,7 @@ namespace fds
         {
             const auto &audio_config = j["audio"];
             music_volume_ = audio_config.value("music_volume", music_volume_);
-            sound_volume_ = audio_config.value("sound_volume", sound_volume_);
+            chunk_volume_ = audio_config.value("chunk_volume", chunk_volume_);
         }
 
         if (j.contains("input_mappings") && j["input_mappings"].is_object())
@@ -125,7 +125,7 @@ namespace fds
             {"window", {{"title", window_title_}, {"width", window_width_}, {"height", window_height_}, {"resizable", window_resizable_}}},
             {"graphics", {{"vsync", vsync_enabled_}}},
             {"performance", {{"target_fps", target_fps_}}},
-            {"audio", {{"music_volume", music_volume_}, {"sound_volume", sound_volume_}}},
+            {"audio", {{"music_volume", music_volume_}, {"chunk_volume", chunk_volume_}}},
             {"input_mappings", input_mappings_}};
     }
 }

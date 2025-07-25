@@ -23,7 +23,7 @@ namespace fds
         int target_fps_ = 60;
 
         float music_volume_ = 0.5f;
-        float sound_volume_ = 0.5f;
+        float chunk_volume_ = 0.5f;
 
         std::unordered_map<std::string, std::vector<std::string>> input_mappings_ = {
             {"move_left", {"A", "Left"}},

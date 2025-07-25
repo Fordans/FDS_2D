@@ -6,6 +6,7 @@
 #include "glm/glm.hpp"
 
 #include <memory>
+#include <functional>
 
 struct SDL_Window;
 struct SDL_Renderer;
@@ -19,6 +20,9 @@ namespace fds
     class Context;
     class Camera;
     class SceneManager;
+    class AudioPlayer;
+    class GameState;
+    class TextRenderer;
 
     class Game final
     {
@@ -27,6 +31,7 @@ namespace fds
         ~Game();
         void run();
         void shutdown() noexcept;
+        void registerSceneSetup(std::function<void(fds::SceneManager&)> func);
 
         Game(const Game&) = delete;
         Game& operator=(const Game&) = delete;
@@ -50,6 +55,11 @@ namespace fds
         std::unique_ptr<fds::Camera> camera_;
         std::unique_ptr<fds::Context> context_;
         std::unique_ptr<fds::SceneManager> sceneManager_;
+        std::unique_ptr<fds::AudioPlayer> audioPlayer_;
+        std::unique_ptr<fds::GameState> gameState_;
+        std::unique_ptr<fds::TextRenderer> textRenderer_;
+
+        std::function<void(fds::SceneManager&)> scene_setup_func_;
     };
 }
 

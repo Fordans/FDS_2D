@@ -21,6 +21,7 @@ src/engine/component/FDS_Transform_Component.cpp
 src/engine/component/FDS_Sprite_Component.cpp
 src/engine/core/FDS_main.cpp
 src/engine/core/FDS_Game.cpp
+src/engine/core/FDS_GameState.cpp
 src/engine/core/FDS_Time.cpp
 src/engine/core/FDS_Config.cpp
 src/engine/core/FDS_Context.cpp

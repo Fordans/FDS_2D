@@ -1,6 +1,15 @@
 #include "FDS_Game.h"
+#include "engine/scene/FDS_SceneManager.h"
+#include "game/scene/DemoScene.h"
 
 #include "spdlog/spdlog.h"
+
+void setupInitialScene(fds::SceneManager& sceneManager)
+{
+    // Replace DemoScene with your own scene
+    auto scene = std::make_unique<DemoScene>(sceneManager.getContext(), sceneManager);
+    sceneManager.requestPushScene(std::move(scene));
+}
 
 #ifdef _DEBUG
 
@@ -9,6 +18,7 @@ int main()
     spdlog::set_level(spdlog::level::info);
 
     fds::Game game;
+    game.registerSceneSetup(setupInitialScene);
     game.run();
 }
 
@@ -21,6 +31,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     spdlog::set_level(spdlog::level::off);
 
     fds::Game game;
+    game.registerSceneSetup(setupInitialScene);
     game.run();
 }
 
