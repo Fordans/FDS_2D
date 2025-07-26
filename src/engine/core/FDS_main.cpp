@@ -1,12 +1,12 @@
 #include "FDS_Game.h"
 #include "engine/scene/FDS_SceneManager.h"
-#include "game/scene/DemoScene.h"
+#include "game/scene/DemoScene.h" // Replace with your own initial scene
 
 #include "spdlog/spdlog.h"
 
 void setupInitialScene(fds::SceneManager& sceneManager)
 {
-    // Replace DemoScene with your own scene
+    // Replace DemoScene with your own initial scene
     auto scene = std::make_unique<DemoScene>(sceneManager.getContext(), sceneManager);
     sceneManager.requestPushScene(std::move(scene));
 }

@@ -9,6 +9,7 @@
 #include "engine/scene/FDS_SceneManager.h"
 #include "engine/render/FDS_TextRenderer.h"
 #include "engine/audio/FDS_AudioPlayer.h"
+#include "engine/physics/FDS_PhysicsEngine.h"
 
 #include "SDL3/SDL.h"
 #include "spdlog/spdlog.h"
@@ -47,11 +48,6 @@ void fds::Game::run()
     }
 
     clean();
-}
-
-void fds::Game::shutdown() noexcept
-{
-    isRunning_ = false;
 }
 
 void fds::Game::registerSceneSetup(std::function<void(fds::SceneManager &)> func)
@@ -133,10 +129,52 @@ bool fds::Game::init()
         spdlog::error("Failed to init Camera: {}", e.what());
         return false;
     }
+    // Init fds::AudioPlayer
+    try
+    {
+        audioPlayer_ = std::make_unique<fds::AudioPlayer>(resourceManager_.get());
+        audioPlayer_->setMusicVolume(config_->music_volume_);
+        audioPlayer_->setChunkVolume(config_->chunk_volume_);
+    }
+    catch (const std::exception &e)
+    {
+        spdlog::error("Failed to init AudioPlayer: {}", e.what());
+        return false;
+    }
+    // Init fds::GameState
+    try
+    {
+        gameState_ = std::make_unique<fds::GameState>(window_, renderer_);
+    }
+    catch (const std::exception &e)
+    {
+        spdlog::error("Failed to init GameState: {}", e.what());
+        return false;
+    }
+    // Init fds::TextRenderer
+    try
+    {
+        textRenderer_ = std::make_unique<fds::TextRenderer>(renderer_, resourceManager_.get());
+    }
+    catch (const std::exception &e)
+    {
+        spdlog::error("Failed to init TextRenderer: {}", e.what());
+        return false;
+    }
+    // Init fds::PhysicsEngine
+    try
+    {
+        physicsEngine_ = std::make_unique<fds::PhysicsEngine>();
+    }
+    catch (const std::exception &e)
+    {
+        spdlog::error("Failed to init PhysicsEngine: {}", e.what());
+        return false;
+    }
     // Init fds::Context
     try
     {
-        context_ = std::make_unique<fds::Context>(*inputManager_, *fdsRenderer_, *camera_, *resourceManager_);
+        context_ = std::make_unique<fds::Context>(*inputManager_, *fdsRenderer_, *camera_, *resourceManager_, *textRenderer_, *audioPlayer_, *gameState_,  *physicsEngine_);
     }
     catch (const std::exception &e)
     {
@@ -153,38 +191,7 @@ bool fds::Game::init()
         spdlog::error("Failed to init SceneManager: {}", e.what());
         return false;
     }
-    // Init AudioPlayer
-    try
-    {
-        audioPlayer_ = std::make_unique<fds::AudioPlayer>(resourceManager_.get());
-        audioPlayer_->setMusicVolume(config_->music_volume_);
-        audioPlayer_->setChunkVolume(config_->chunk_volume_);
-    }
-    catch (const std::exception &e)
-    {
-        spdlog::error("Failed to init AudioPlayer: {}", e.what());
-        return false;
-    }
-    // Init GameState
-    try
-    {
-        gameState_ = std::make_unique<fds::GameState>(window_, renderer_);
-    }
-    catch (const std::exception &e)
-    {
-        spdlog::error("Failed to init GameState: {}", e.what());
-        return false;
-    }
-    // Init TextRenderer
-    try
-    {
-        textRenderer_ = std::make_unique<fds::TextRenderer>(renderer_, resourceManager_.get());
-    }
-    catch (const std::exception &e)
-    {
-        spdlog::error("Failed to init TextRenderer: {}", e.what());
-        return false;
-    }
+
     if(!scene_setup_func_)
     {
         spdlog::error("Scene setup function not set");

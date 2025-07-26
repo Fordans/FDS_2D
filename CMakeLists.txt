@@ -27,6 +27,7 @@ src/engine/core/FDS_Config.cpp
 src/engine/core/FDS_Context.cpp
 src/engine/input/FDS_InputManager.cpp
 src/engine/object/FDS_GameObject.cpp
+src/engine/physics/FDS_PhysicsEngine.cpp
 src/engine/render/FDS_Animation.cpp
 src/engine/render/FDS_Camera.cpp
 src/engine/render/FDS_Sprite.h
@@ -39,6 +40,7 @@ src/engine/resource/FDS_ResourceManager.cpp
 src/engine/scene/FDS_Scene.cpp
 src/engine/scene/FDS_SceneManager.cpp
 src/engine/utility/FDS_alignment.h
+src/engine/utility/FDS_fwd.h
 src/engine/utility/FDS_math.h
 
 src/game/scene/DemoScene.cpp
