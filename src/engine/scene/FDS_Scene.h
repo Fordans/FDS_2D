@@ -19,7 +19,7 @@ namespace fds
         std::string scene_name_;
         fds::Context &context_;
         fds::SceneManager &scene_manager_;
-        //std::unique_ptr<fds::UIManager> ui_manager_;
+        std::unique_ptr<fds::UIManager> ui_manager_;
 
         bool is_initialized_ = false;
         std::vector<std::unique_ptr<fds::GameObject>> game_objects_;
@@ -35,11 +35,11 @@ namespace fds
         Scene(Scene &&) = delete;
         Scene &operator=(Scene &&) = delete;
 
-        virtual void init();                   
+        virtual void init();
         virtual void update(float delta_time); 
-        virtual void render();                 
-        virtual void handleInput();            
-        virtual void clean();                  
+        virtual void render();
+        virtual void handleInput();
+        virtual void clean();
 
         virtual void addGameObject(std::unique_ptr<fds::GameObject> &&game_object);
 

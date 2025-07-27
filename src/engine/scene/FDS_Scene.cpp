@@ -4,6 +4,9 @@
 #include "engine/render/FDS_Camera.h"
 #include "engine/core/FDS_Context.h"
 #include "engine/render/FDS_Renderer.h"
+#include "engine/core/FDS_GameState.h"
+#include "engine/physics/FDS_PhysicsEngine.h"
+#include "engine/ui/FDS_UIManager.h"
 
 #include "spdlog/spdlog.h"
 
@@ -15,7 +18,7 @@ namespace fds
         : scene_name_(name),
           context_(context),
           scene_manager_(scene_manager),
-          //ui_manager_(std::make_unique<fds::UIManager>()),
+          ui_manager_(std::make_unique<fds::UIManager>()),
           is_initialized_(false)
     {
         spdlog::trace("Scene {} constructed", scene_name_);
@@ -34,11 +37,11 @@ namespace fds
         if (!is_initialized_)
             return;
 
-        // if (context_.getGameState().isPlaying())
-        // {
-        //     context_.getPhysicsEngine().update(delta_time);
-        //     context_.getCamera().update(delta_time);
-        // }
+        if (context_.getGameState().isPlaying())
+        {
+            context_.getPhysicsEngine().update(delta_time);
+            context_.getCamera().update(delta_time);
+        }
 
         bool need_remove = false;
 
@@ -64,7 +67,7 @@ namespace fds
                           { return !obj || obj->isNeedRemove(); });
         }
 
-        //ui_manager_->update(delta_time, context_);
+        ui_manager_->update(delta_time, context_);
 
         processPendingAdditions();
     }
@@ -80,7 +83,7 @@ namespace fds
                 obj->render(context_);
         }
 
-        //ui_manager_->render(context_);
+        ui_manager_->render(context_);
     }
 
     void Scene::handleInput()
@@ -88,8 +91,8 @@ namespace fds
         if (!is_initialized_)
             return;
 
-        // if (ui_manager_->handleInput(context_))
-        //     return;
+        if (ui_manager_->handleInput(context_))
+            return;
 
         for (auto &obj : game_objects_)
         {

@@ -26,7 +26,7 @@ namespace fds
         PhysicsEngine(PhysicsEngine &&) = delete;
         PhysicsEngine &operator=(PhysicsEngine &&) = delete;
 
-        //void update(float delta_time);
+        void update(float delta_time);
 
     private:
 
