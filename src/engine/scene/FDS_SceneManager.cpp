@@ -22,6 +22,7 @@ namespace fds
     {
         if (scene_stack_.empty())
         {
+            spdlog::warn("Attempted to getCurrentScene when scene stack is empty");
             return nullptr;
         }
         return scene_stack_.back().get();

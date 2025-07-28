@@ -39,7 +39,9 @@ src/engine/resource/FDS_FontManager.cpp
 src/engine/resource/FDS_ResourceManager.cpp
 src/engine/scene/FDS_Scene.cpp
 src/engine/scene/FDS_SceneManager.cpp
+src/engine/ui/state/FDS_UIState.h
 src/engine/ui/FDS_UIElement.cpp
+src/engine/ui/FDS_UIInteractive.cpp
 src/engine/ui/FDS_UIManager.cpp
 src/engine/ui/FDS_UIPanel.cpp
 src/engine/utility/FDS_alignment.h
