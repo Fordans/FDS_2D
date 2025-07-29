@@ -4,6 +4,7 @@
 #include "engine/scene/FDS_SceneManager.h"
 #include "engine/core/FDS_Context.h"
 #include "engine/render/FDS_Sprite.h"
+#include "engine/utility/FDS_Timer.h"
 
 #include <memory>
 
@@ -19,4 +20,5 @@ public:
     void render() override;
 private:
     fds::Sprite testSprite_;
+    fds::Timer timer_;
 };

@@ -47,6 +47,7 @@ src/engine/ui/FDS_UIPanel.cpp
 src/engine/utility/FDS_alignment.h
 src/engine/utility/FDS_fwd.h
 src/engine/utility/FDS_math.h
+src/engine/utility/FDS_Timer.cpp
 
 src/game/scene/DemoScene.cpp
 )
