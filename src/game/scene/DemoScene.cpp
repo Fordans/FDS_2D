@@ -21,7 +21,7 @@ void DemoScene::init()
     context_.getResourceManager().loadTexture("res/demo/bg.png");
     testSprite_ = fds::Sprite("res/demo/bg.png");
 
-    timer_.wait(3000, [this]()
+    timer_.wait(1000, [this]()
     {
         context_.getAudioPlayer().playMusic("res/demo/TFM-003O_02.mp3");
     });
