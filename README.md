@@ -24,6 +24,7 @@ How to start?
 - Open the project in Visual Studio Code.
 - Config CMake.
 - Build and run.
+- (I use the MSVC compiler, you can use any compiler you like but you need to change the compiler settings in CMake.)
 
 How to use?
 - Mostly you are interested in the `src` folder.
