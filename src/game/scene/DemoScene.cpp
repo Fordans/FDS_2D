@@ -22,9 +22,15 @@ void DemoScene::init()
     testSprite_ = fds::Sprite("res/demo/bg.png");
 
     timer_.wait(1000, [this]()
+                { context_.getAudioPlayer().playMusic("res/demo/TFM-003O_02.mp3"); });
+
+    for (int i = 1; i < 5; ++i)
     {
-        context_.getAudioPlayer().playMusic("res/demo/TFM-003O_02.mp3");
-    });
+        timer_.wait(1000 * i, [=]()
+                    { context_.getAudioPlayer().setMusicVolume(1 - (i * 0.2f)); });
+        timer_.wait(5000 + 1000 * i, [=]()
+                    { context_.getAudioPlayer().setMusicVolume(i * 0.2f); });
+    }
 }
 
 void DemoScene::clean()
