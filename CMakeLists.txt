@@ -19,6 +19,7 @@ src/engine/audio/FDS_AudioPlayer.cpp
 src/engine/component/FDS_Component.h
 src/engine/component/FDS_Transform_Component.cpp
 src/engine/component/FDS_Sprite_Component.cpp
+src/engine/component/FDS_RigidBody_Component.cpp
 src/engine/core/FDS_main.cpp
 src/engine/core/FDS_Game.cpp
 src/engine/core/FDS_GameState.cpp
