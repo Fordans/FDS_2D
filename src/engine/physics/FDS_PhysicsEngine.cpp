@@ -5,6 +5,7 @@
 #include "spdlog/spdlog.h"
 #include "glm/common.hpp"
 #include "box2d/math_functions.h"
+#include "box2d/id.h"
 
 #include <set>
 #include <cmath>
@@ -19,7 +20,7 @@ namespace fds
 
     PhysicsEngine::~PhysicsEngine()
     {
-        if (world_id_.index != 0)
+        if (B2_IS_NON_NULL(world_id_))
         {
             b2DestroyWorld(world_id_);
             spdlog::debug("PhysicsEngine world destroyed");
@@ -43,7 +44,7 @@ namespace fds
         
         world_id_ = b2CreateWorld(&world_def);
         
-        if (world_id_.index == 0)
+        if (B2_IS_NULL(world_id_))
         {
             spdlog::error("Failed to create Box2D world");
             throw std::runtime_error("Failed to create Box2D world");
@@ -52,7 +53,7 @@ namespace fds
 
     void PhysicsEngine::update(float delta_time)
     {
-        if (world_id_.index == 0)
+        if (B2_IS_NULL(world_id_))
             return;
 
         // 使用固定时间步长进行物理模拟，提高稳定性
@@ -75,7 +76,7 @@ namespace fds
 
     void PhysicsEngine::setGravity(const glm::vec2& gravity)
     {
-        if (world_id_.index == 0)
+        if (B2_IS_NULL(world_id_))
             return;
         
         float pixels_per_meter = pixels_per_meter_;
@@ -85,7 +86,7 @@ namespace fds
 
     glm::vec2 PhysicsEngine::getGravity() const
     {
-        if (world_id_.index == 0)
+        if (B2_IS_NULL(world_id_))
             return {0.0f, 0.0f};
         
         b2Vec2 b2_gravity = b2World_GetGravity(world_id_);

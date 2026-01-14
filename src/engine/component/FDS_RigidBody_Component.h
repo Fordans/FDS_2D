@@ -6,6 +6,7 @@
 
 #include "glm/vec2.hpp"
 #include "box2d/box2d.h"
+#include "box2d/id.h"
 
 #include <optional>
 #include <string_view>

@@ -5,6 +5,7 @@
 
 #include "glm/vec2.hpp"
 #include "box2d/box2d.h"
+#include "box2d/id.h"
 
 #include <vector>
 #include <utility>
@@ -43,6 +44,9 @@ namespace fds
 
         /// 获取Box2D世界ID
         b2WorldId getWorldId() const { return world_id_; }
+        
+        /// 检查世界是否有效
+        bool isWorldValid() const { return B2_IS_NON_NULL(world_id_); }
 
         /// 设置像素到米的转换比例
         /// @param pixels_per_meter 每米对应的像素数，默认100

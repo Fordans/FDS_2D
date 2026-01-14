@@ -4,6 +4,7 @@
 #include "engine/core/FDS_Context.h"
 
 #include "box2d/math_functions.h"
+#include "box2d/id.h"
 #include "spdlog/spdlog.h"
 
 #include <cmath>
@@ -46,7 +47,7 @@ namespace fds
             transform_ = owner_->addComponent<TransformComponent>();
         }
 
-        if (!physics_engine_ || physics_engine_->getWorldId().index == 0)
+        if (!physics_engine_ || B2_IS_NULL(physics_engine_->getWorldId()))
         {
             spdlog::error("RigidBodyComponent::init: PhysicsEngine is invalid");
             return;
@@ -68,7 +69,7 @@ namespace fds
         // 创建物体
         body_id_ = b2CreateBody(physics_engine_->getWorldId(), &body_def);
         
-        if (body_id_.index == 0)
+        if (B2_IS_NULL(body_id_))
         {
             spdlog::error("RigidBodyComponent::init: Failed to create Box2D body");
             return;
@@ -82,7 +83,7 @@ namespace fds
 
     void RigidBodyComponent::update(float delta_time, fds::Context& context)
     {
-        if (body_id_.index == 0 || !transform_)
+        if (B2_IS_NULL(body_id_) || !transform_)
             return;
 
         // 根据物体类型决定同步方向
@@ -114,7 +115,7 @@ namespace fds
 
     void RigidBodyComponent::clean()
     {
-        if (body_id_.index != 0)
+        if (B2_IS_NON_NULL(body_id_))
         {
             b2DestroyBody(body_id_);
             body_id_ = b2_nullBodyId;
@@ -124,7 +125,7 @@ namespace fds
 
     void RigidBodyComponent::syncTransformToPhysics()
     {
-        if (body_id_.index == 0 || !transform_)
+        if (B2_IS_NULL(body_id_) || !transform_)
             return;
 
         glm::vec2 position_pixels = transform_->getPosition();
@@ -137,7 +138,7 @@ namespace fds
 
     void RigidBodyComponent::syncPhysicsToTransform()
     {
-        if (body_id_.index == 0 || !transform_)
+        if (B2_IS_NULL(body_id_) || !transform_)
             return;
 
         b2Transform b2_transform = b2Body_GetTransform(body_id_);
@@ -152,7 +153,7 @@ namespace fds
 
     void RigidBodyComponent::addCircleShape(float radius, const glm::vec2& offset, bool is_sensor)
     {
-        if (body_id_.index == 0)
+        if (B2_IS_NULL(body_id_))
         {
             spdlog::error("RigidBodyComponent::addCircleShape: Body not initialized");
             return;
@@ -168,10 +169,10 @@ namespace fds
         float radius_meters = physics_engine_->pixelsToMeters(radius);
         glm::vec2 offset_meters = physics_engine_->pixelsToMeters(offset);
         circle.radius = radius_meters;
-        circle.point = {offset_meters.x, offset_meters.y};
+        circle.center = {offset_meters.x, offset_meters.y};
 
         b2ShapeId shape_id = b2CreateCircleShape(body_id_, &shape_def, &circle);
-        if (shape_id.index == 0)
+        if (B2_IS_NULL(shape_id))
         {
             spdlog::error("RigidBodyComponent::addCircleShape: Failed to create circle shape");
         }
@@ -179,7 +180,7 @@ namespace fds
 
     void RigidBodyComponent::addBoxShape(const glm::vec2& size, const glm::vec2& offset, bool is_sensor)
     {
-        if (body_id_.index == 0)
+        if (B2_IS_NULL(body_id_))
         {
             spdlog::error("RigidBodyComponent::addBoxShape: Body not initialized");
             return;
@@ -204,7 +205,7 @@ namespace fds
         polygon.vertices[3] = {-half_size_meters.x + offset_meters.x, half_size_meters.y + offset_meters.y};
 
         b2ShapeId shape_id = b2CreatePolygonShape(body_id_, &shape_def, &polygon);
-        if (shape_id.index == 0)
+        if (B2_IS_NULL(shape_id))
         {
             spdlog::error("RigidBodyComponent::addBoxShape: Failed to create box shape");
         }
@@ -212,7 +213,7 @@ namespace fds
 
     void RigidBodyComponent::addPolygonShape(const glm::vec2* vertices, int vertex_count, bool is_sensor)
     {
-        if (body_id_.index == 0)
+        if (B2_IS_NULL(body_id_))
         {
             spdlog::error("RigidBodyComponent::addPolygonShape: Body not initialized");
             return;
@@ -239,7 +240,7 @@ namespace fds
         }
 
         b2ShapeId shape_id = b2CreatePolygonShape(body_id_, &shape_def, &polygon);
-        if (shape_id.index == 0)
+        if (B2_IS_NULL(shape_id))
         {
             spdlog::error("RigidBodyComponent::addPolygonShape: Failed to create polygon shape");
         }
@@ -247,7 +248,7 @@ namespace fds
 
     void RigidBodyComponent::setLinearVelocity(const glm::vec2& velocity)
     {
-        if (body_id_.index == 0)
+        if (B2_IS_NULL(body_id_))
             return;
         
         // 将像素/秒转换为米/秒
@@ -257,7 +258,7 @@ namespace fds
 
     glm::vec2 RigidBodyComponent::getLinearVelocity() const
     {
-        if (body_id_.index == 0)
+        if (B2_IS_NULL(body_id_))
             return {0.0f, 0.0f};
         
         b2Vec2 velocity_meters = b2Body_GetLinearVelocity(body_id_);
@@ -266,7 +267,7 @@ namespace fds
 
     void RigidBodyComponent::setAngularVelocity(float angular_velocity)
     {
-        if (body_id_.index == 0)
+        if (B2_IS_NULL(body_id_))
             return;
         
         b2Body_SetAngularVelocity(body_id_, angular_velocity);
@@ -274,7 +275,7 @@ namespace fds
 
     float RigidBodyComponent::getAngularVelocity() const
     {
-        if (body_id_.index == 0)
+        if (B2_IS_NULL(body_id_))
             return 0.0f;
         
         return b2Body_GetAngularVelocity(body_id_);
@@ -282,7 +283,7 @@ namespace fds
 
     void RigidBodyComponent::applyForceToCenter(const glm::vec2& force)
     {
-        if (body_id_.index == 0)
+        if (B2_IS_NULL(body_id_))
             return;
         
         // 力通常以牛顿为单位，这里假设输入是像素单位的力
@@ -293,7 +294,7 @@ namespace fds
 
     void RigidBodyComponent::applyForce(const glm::vec2& force, const glm::vec2& point)
     {
-        if (body_id_.index == 0)
+        if (B2_IS_NULL(body_id_))
             return;
         
         glm::vec2 force_meters = physics_engine_->pixelsToMeters(force);
@@ -303,7 +304,7 @@ namespace fds
 
     void RigidBodyComponent::applyLinearImpulseToCenter(const glm::vec2& impulse)
     {
-        if (body_id_.index == 0)
+        if (B2_IS_NULL(body_id_))
             return;
         
         glm::vec2 impulse_meters = physics_engine_->pixelsToMeters(impulse);
@@ -312,7 +313,7 @@ namespace fds
 
     void RigidBodyComponent::applyLinearImpulse(const glm::vec2& impulse, const glm::vec2& point)
     {
-        if (body_id_.index == 0)
+        if (B2_IS_NULL(body_id_))
             return;
         
         glm::vec2 impulse_meters = physics_engine_->pixelsToMeters(impulse);
@@ -322,7 +323,7 @@ namespace fds
 
     void RigidBodyComponent::setBodyType(b2BodyType type)
     {
-        if (body_id_.index == 0)
+        if (B2_IS_NULL(body_id_))
             return;
         
         body_type_ = type;
@@ -331,7 +332,7 @@ namespace fds
 
     void RigidBodyComponent::setAwake(bool awake)
     {
-        if (body_id_.index == 0)
+        if (B2_IS_NULL(body_id_))
             return;
         
         b2Body_SetAwake(body_id_, awake);
@@ -339,7 +340,7 @@ namespace fds
 
     bool RigidBodyComponent::isAwake() const
     {
-        if (body_id_.index == 0)
+        if (B2_IS_NULL(body_id_))
             return false;
         
         return b2Body_IsAwake(body_id_);
